@@ -1,19 +1,30 @@
-def densityCalc(tasks):
-    inverseList = []
+from fractions import Fraction
+
+def densityCalcWFraction(tasks):
+    density = Fraction(0,1)
+
     for i in tasks:
-        inverse = 1/i
-        inverseList.append(inverse)
-    density = sum(inverseList)
-
-    if density <= 0.833333333333333333333:
-        print("Density 5/6 or below!")
-        print(density)
+        density += Fraction(1,i)
+    if density <= 5/6:
+        return True, density
     else:
-        print("Density is above 5/6")
-        print(density)
-    
-t1 = [2,3, 10]
-t2 = [2,3]
-densityCalc(t1)
+        return False, density
 
-densityCalc(t2)
+if __name__ == "__main__":
+    t1 = [2,3, 10]
+    t2 = [2,3]
+    print(densityCalcWFraction(t1))
+    densityCalcWFraction(t2)
+
+
+# def densityCalc(tasks):
+#     inverseList = []
+#     for i in tasks:
+#         inverse = 1/i
+#         inverseList.append(inverse)
+#     density = sum(inverseList)
+
+#     if density <= 0.833333333333333333333:
+#         return True, density
+#     else:
+#         return False, density
