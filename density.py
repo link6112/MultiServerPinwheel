@@ -6,7 +6,9 @@ def densityCalcWFraction(tasks):
     for i in tasks:
         density += Fraction(1,i)
     if density <= 5/6:
-        return True, density
+        return "Schedulable", density
+    elif density <= 10/6:
+        return "Splittable", density
     else:
         return False, density
 
