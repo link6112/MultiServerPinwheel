@@ -37,9 +37,16 @@ class ScheduleSplit:
 
         result = [seq for i in range(0, len(individualDensities.values())) for seq in itertools.combinations(individualDensities.values(), i) if sum(seq) <= target]
         print(individualDensities)
+        #print(result)
+        for j in range(0, len(result)):
+            result[j] = list(result[j])
+            
+            for k in range(0, len(result[j])):
+                result[j][k] = list(individualDensities.keys())[list(individualDensities.values()).index(result[j][k])]
+
         print(result)
 
-        #Above code WORKS but I now must cut it down so that it only include sequences where all values are accounted for
+        #Above code WORKS but I now must cut it down so that it only include sequences where all values are accounted for - Itertools uses tuples, use lists
 
         #for i in tasks[::2]:
         #    serverA.append(i)
@@ -56,12 +63,12 @@ tasks = [2,3]
 Task1 = ScheduleSplit()
 #Task1.densityCheck([2,3])
 
-Task1.densityCheck([1,1,1])
+#Task1.densityCheck([1,1,1])
 Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18])
 
 
-Task1.densityCheck([2,12,14,16,18])
-Task1.densityCheck([5,6,8,10])
+#Task1.densityCheck([2,12,14,16,18])
+#Task1.densityCheck([5,6,8,10])
 # by friday - Finish density, check schedule split
 # by friday - Generate schedule with density above 5/6
 # by friday - check scheudle split on those
