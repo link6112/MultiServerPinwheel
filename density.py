@@ -19,14 +19,3 @@ if __name__ == "__main__":
     densityCalcWFraction(t2)
 
 
-# def densityCalc(tasks):
-#     inverseList = []
-#     for i in tasks:
-#         inverse = 1/i
-#         inverseList.append(inverse)
-#     density = sum(inverseList)
-
-#     if density <= 0.833333333333333333333:
-#         return True, density
-#     else:
-#         return False, density
