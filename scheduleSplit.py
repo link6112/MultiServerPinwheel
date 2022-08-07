@@ -32,6 +32,8 @@ class ScheduleSplit:
         taskCount = {i:tasks.count(i) for i in tasks}
         finalSchedules = []
         #For resolving issues where schedules such as 2, 2, 3, 3 occur.
+
+        #USE FRACTION HERE
         for i in tasks:
             density = 1/i
             individualDensities[i] = density
