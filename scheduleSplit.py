@@ -30,6 +30,7 @@ class ScheduleSplit:
         individualDensities = {}
         individualDensityList = []
         taskCount = {i:tasks.count(i) for i in tasks}
+        finalSchedules = []
         #For resolving issues where schedules such as 2, 2, 3, 3 occur.
         for i in tasks:
             density = 1/i
@@ -54,19 +55,43 @@ class ScheduleSplit:
         """this coe is unfinished - many iterations have been completed. The goal is to take the first schedule in the results list
         of lists and check if it has a possible partner by calculating the density of its companion. It will remove the value/s in question
         from the original schedule to check if its partner schedule is 5/6 or under. If it is then we search the results for this particular companion.
-        Once this companion is found the resulting two lists will be placed into a tuple and stored to be printed as one possible solution later on"""
+        Once this companion is found the resulting two lists will be placed into a tuple and stored to be printed as one possible solution later on
+        
+        So, find Length of current schedule, exclude all lengths that won't work. Exclude all results that won't have a pair.
+        When pair is find, pop them from list, add them to separate list of lists which are the results. Pair them, [([a,b][c,d]).....]"""
         scheduleIterator = 0
         while scheduleIterator < len(result):
             taskCopy = tasks.copy()
             for schedule in result:
+                possiblePartners = []
                 currentLength = len(schedule)
+
+                for lenSchedule in result:
+                    if len(lenSchedule) == len(tasks)-currentLength:
+                        possiblePartners.append(lenSchedule)
+                    else:
+                        continue
+
+                for partners in possiblePartners:
+                    partnerCheck = []
+                    for partnerTask in partners:
+                        partnerCheck.append(partnerTask)
+                    for task in schedule:
+                        partnerCheck.append(task)
+                    partnerCheck.sort()
+
+                    if partnerCheck == tasks:
+                        scheduleTuple = (schedule,partners)
+                        finalSchedules.append(scheduleTuple)
+
                 if schedule == result[scheduleIterator]:     
-                    #print(scheduleIterator)
+
                     scheduleIterator+=1
                     continue
-                for task in schedule:
-                    return
+
             scheduleIterator+=1
+        for i in finalSchedules:
+            print(i)
 
 
 

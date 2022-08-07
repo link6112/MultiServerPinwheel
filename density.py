@@ -13,9 +13,9 @@ def densityCalcWFraction(tasks):
         return False, density
 
 if __name__ == "__main__":
-    t1 = [2,3, 10]
-    t2 = [2,3]
-    print(densityCalcWFraction(t1))
-    densityCalcWFraction(t2)
+    #t1 = [2,3, 10]
+    t2 = [2, 8, 12, 16, 18]
+    #print(densityCalcWFraction(t1))
+    print(densityCalcWFraction(t2))
 
 
