@@ -86,6 +86,10 @@ class ScheduleSplit:
                         scheduleTuple = (schedule,partners)
                         finalSchedules.append(scheduleTuple)
 
+                        #UNSURE HERE - CHECK
+                        result.remove(schedule)
+                        result.remove(partners)
+
                 if schedule == result[scheduleIterator]:     
 
                     scheduleIterator+=1
@@ -94,6 +98,7 @@ class ScheduleSplit:
             scheduleIterator+=1
         for i in finalSchedules:
             print(i)
+        print(len(finalSchedules))
 
 
 
