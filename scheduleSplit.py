@@ -3,6 +3,7 @@ import scheduleGenerator
 import density
 from fractions import Fraction
 import itertools
+import scheduleGenerator
 test="printstatementcheck"
 #The goal of this code is to create 2 sets of tasks with
 #density less than 5/6
@@ -35,9 +36,9 @@ class ScheduleSplit:
 
         #USE FRACTION HERE
         for i in tasks:
-            density = 1/i
-            individualDensities[i] = density
-            individualDensityList.append(density)
+            den = 1/i
+            individualDensities[i] = den
+            individualDensityList.append(den)
         target = 0.833333333333
 
         result = [seq for i in range(0, len(individualDensityList)) 
@@ -97,9 +98,12 @@ class ScheduleSplit:
 
             scheduleIterator+=1
         for i in finalSchedules:
-            print(i)
+            #print(i)
+            _2, densityValue1 = density.densityCalcWFraction(i[0])
+            _1, densityValue2 = density.densityCalcWFraction(i[1])
+            print(_2,densityValue1," | ", _1,densityValue2)
         print(len(finalSchedules))
-
+        print("Success")
 
 
 
@@ -111,12 +115,20 @@ Task1 = ScheduleSplit()
 
 Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
 #Task1.densityCheck([6, 8, 10, 12, 14, 16, 18, 18])
+k=0
+while k <= 10:
+    schedule = scheduleGenerator.scheduleGen()
+    Task1.densityCheck(schedule)
+    k +=1
 
-
-#Task1.densityCheck([2,12,14,16,18])
-#Task1.densityCheck([5,6,8,10])
-# by friday - Finish density, check schedule split
-# by friday - Generate schedule with density above 5/6
-# by friday - check scheudle split on those
-# saturday - check back here
-#######
+#TODO
+###################################################################
+##Mon - Thoroughly test - Attempt schedule generator             ##
+##Tue - Check 10/6 densities only                                ##
+##Wed - Add 11/6 and higher densities - Split to                 ##
+##    - one 5/6 and one higher to see if it is possible.         ##
+##Thu - Message Sebastian - Develop unit testing - Begin proving ##
+##Fri - Return here                                              ##
+##Sat - Break                                                    ##
+##Sun - Unknown                                                  ##
+##################################################################
