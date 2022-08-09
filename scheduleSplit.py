@@ -13,55 +13,81 @@ class ScheduleSplit:
         return
 
     def densityCheck(self, tasks):
+        """
+        This function calls the density program which calculates the density of a set of tasks.
+        Once checked, if the set of tasks are below 5/6 it assumes schedulability. Over 5/6 it
+        realises that the schedule can be split, and subsequently calls the split function.
+
+        Parameters: 
+        list - tasks - list of tasks to be checked.
+
+        Returns: None
+        """
         densityCheck, densityValue = density.densityCalcWFraction(tasks)
         if densityCheck == "Schedulable":
             print("Density 5/6 or below\nDensity = " + str(densityValue))
             return
         elif densityCheck == "Splittable":
-            #print("Density above 5/6 but below or equal to 10/6, time to split it.\nDensity = " + str(densityValue))
             self.split(tasks)
             return
         else:
-            #print("Density is too high, add a third pinwheel.")
             return
         
     def split(self, tasks):
+        """
+        This function takes a set of tasks with density between 5/6 and 10/6 and splits them.
+
+        Parameters:
+            list - tasks - tasks to be split.
+        Returns:
+            All possible schedules.
+        """
         serverA = []
         serverB = []
         individualDensities = {}
         individualDensityList = []
         taskCount = {i:tasks.count(i) for i in tasks}
         finalSchedules = []
-        #For resolving issues where schedules such as 2, 2, 3, 3 occur.
 
-        #USE FRACTION HERE
+        #Creates a list of the densities of each task.
+        #Can return to:
+        """
         for i in tasks:
             den = 1/i
+            individualDensitiesd[i] = den
+            individualDensityList.append(den)
+        target = 0.83333333333
+        """
+        for i in tasks:
+            den = Fraction(1,i)
             individualDensities[i] = den
             individualDensityList.append(den)
-        target = 0.833333333333
+        target = Fraction(5, 6) #5/6 density goal
 
+
+        #This use of itertools gives ALL possible combinations of densities that are equal to
+        #or below 5/6
         result = [seq for i in range(0, len(individualDensityList)) 
                     for seq in itertools.combinations(individualDensityList, i) 
                     if sum(seq) <= target]
 
+
+        #This code matches each density to its corresponding number and finds all possible combinations with their actual digits
         for j in range(0, len(result)):
-            result[j] = list(result[j])
-            
+            result[j] = list(result[j])            
             for k in range(0, len(result[j])):
                 result[j][k] = list(individualDensities.keys())[list(individualDensities.values()).index(result[j][k])]
 
-        #Above code WORKS but I now must cut it down so that it only include sequences where all values are accounted for - Itertools uses tuples, use lists
 
-        #Code to select all combinations which create 2 full schedules, i,e 2,5 + the rest. or 2, 18, plus the rest
-
-        """this coe is unfinished - many iterations have been completed. The goal is to take the first schedule in the results list
-        of lists and check if it has a possible partner by calculating the density of its companion. It will remove the value/s in question
-        from the original schedule to check if its partner schedule is 5/6 or under. If it is then we search the results for this particular companion.
-        Once this companion is found the resulting two lists will be placed into a tuple and stored to be printed as one possible solution later on
-        
-        So, find Length of current schedule, exclude all lengths that won't work. Exclude all results that won't have a pair.
-        When pair is find, pop them from list, add them to separate list of lists which are the results. Pair them, [([a,b][c,d]).....]"""
+        #This code is relatively complicated.
+        #It will iterate over every single combination, it will check to see if a partner exists.
+        #For [2, 5, 6, 8, 10, 12, 14, 16, 18, 18] the code will create a split with just [18,18] by itself, but there will
+        #be no partner as its partner would have a density of greater than 5/6. So it will match it to all
+        #sets of tasks with 8 tasks in them.
+        #The code then checks if the partners matched are equal to the original set of tasks passed into this function, if 
+        #they are not equal then the code continues to run until it finds its partner, if it cannot then this particular
+        #split is not allowed. It will move on to the next result with a density of 5/6 or below. Eventually
+        #The code will have fully split all tasks into schedulable schedules.
         scheduleIterator = 0
         while scheduleIterator < len(result):
             taskCopy = tasks.copy()
@@ -98,12 +124,12 @@ class ScheduleSplit:
 
             scheduleIterator+=1
         for i in finalSchedules:
-            #print(i)
+            print(i)
             _2, densityValue1 = density.densityCalcWFraction(i[0])
             _1, densityValue2 = density.densityCalcWFraction(i[1])
-            print(_2,densityValue1," | ", _1,densityValue2)
-        print(len(finalSchedules))
-        print("Success")
+        #    print(_2,densityValue1," | ", _1,densityValue2)
+        #print(len(finalSchedules))
+        #print("Success")
 
 
 
@@ -115,7 +141,7 @@ Task1 = ScheduleSplit()
 
 Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
 #Task1.densityCheck([6, 8, 10, 12, 14, 16, 18, 18])
-k=0
+k=10
 while k <= 10:
     schedule = scheduleGenerator.scheduleGen()
     Task1.densityCheck(schedule)
@@ -124,11 +150,11 @@ while k <= 10:
 #TODO
 ###################################################################
 ##Mon - Thoroughly test - Attempt schedule generator             ##
-##Tue - Check 10/6 densities only                                ##
+##Tue - Understand Ben's code to extend this program             ##
 ##Wed - Add 11/6 and higher densities - Split to                 ##
 ##    - one 5/6 and one higher to see if it is possible.         ##
-##Thu - Message Sebastian - Develop unit testing - Begin proving ##
-##Fri - Return here                                              ##
+##Thu - MEETING POSS                                             ##
+##Fri - MEETING POS- Return here                                 ##
 ##Sat - Break                                                    ##
 ##Sun - Unknown                                                  ##
-##################################################################
+###################################################################
