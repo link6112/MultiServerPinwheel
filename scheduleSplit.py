@@ -114,8 +114,10 @@ class ScheduleSplit:
                         finalSchedules.append(scheduleTuple)
 
                         #UNSURE HERE - CHECK
-                        result.remove(schedule)
-                        result.remove(partners)
+                        if schedule in result:
+                            result.remove(schedule)
+                        if partners in result:    
+                            result.remove(partners)
 
                 if schedule == result[scheduleIterator]:     
 
@@ -139,9 +141,10 @@ class ScheduleSplit:
 
 Task1 = ScheduleSplit()
 
-Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
+#Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
+Task1.densityCheck([2,2,3,3])
 #Task1.densityCheck([6, 8, 10, 12, 14, 16, 18, 18])
-k=10
+k=11
 while k <= 10:
     schedule = scheduleGenerator.scheduleGen()
     Task1.densityCheck(schedule)
