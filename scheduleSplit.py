@@ -4,6 +4,7 @@ import density
 from fractions import Fraction
 import itertools
 import scheduleGenerator
+from collections import OrderedDict
 test="printstatementcheck"
 #The goal of this code is to create 2 sets of tasks with
 #density less than 5/6
@@ -28,6 +29,7 @@ class ScheduleSplit:
             print("Density 5/6 or below\nDensity = " + str(densityValue))
             return
         elif densityCheck == "Splittable":
+            print("Splitting")
             self.split(tasks)
             return
         else:
@@ -63,13 +65,17 @@ class ScheduleSplit:
             individualDensities[i] = den
             individualDensityList.append(den)
         target = Fraction(5, 6) #5/6 density goal
-
+        print("passed creation")
 
         #This use of itertools gives ALL possible combinations of densities that are equal to
         #or below 5/6
         result = [seq for i in range(0, len(individualDensityList)) 
                     for seq in itertools.combinations(individualDensityList, i) 
                     if sum(seq) <= target]
+        print("original length: ", len(result))
+        result = list(set(result))
+        print("optimised length: ",len(result))
+        print("passed itertools")
 
 
         #This code matches each density to its corresponding number and finds all possible combinations with their actual digits
@@ -127,10 +133,12 @@ class ScheduleSplit:
             scheduleIterator+=1
         for i in finalSchedules:
             print(i)
-            _2, densityValue1 = density.densityCalcWFraction(i[0])
-            _1, densityValue2 = density.densityCalcWFraction(i[1])
+        #    _2, densityValue1 = density.densityCalcWFraction(i[0])
+        #    _1, densityValue2 = density.densityCalcWFraction(i[1])
         #    print(_2,densityValue1," | ", _1,densityValue2)
-        #print(len(finalSchedules))
+        #if len(finalSchedules) == 0:
+        #    print(result)
+        print(len(finalSchedules))
         #print("Success")
 
 
@@ -142,12 +150,16 @@ class ScheduleSplit:
 Task1 = ScheduleSplit()
 
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
-Task1.densityCheck([2,2,3,3])
+#Task1.densityCheck([2,2,3,3])
 #Task1.densityCheck([6, 8, 10, 12, 14, 16, 18, 18])
-k=11
-while k <= 10:
+k=1
+while k <= 1:
     schedule = scheduleGenerator.scheduleGen()
-    Task1.densityCheck(schedule)
+    if isinstance(schedule, list): 
+        Task1.densityCheck(schedule)
+        print(schedule)
+    else:
+        continue
     k +=1
 
 #TODO
