@@ -109,7 +109,15 @@ class ScheduleSplit:
             for schedule in result:
                 possiblePartners = []
                 currentLength = len(schedule)
-
+                """
+                serverA = [schedule]
+                l = set(tasks)
+                b = set(schedule)
+                d = l - b
+                scheduleTuple = (schedule, list(d))
+                finalSchedules.append(scheduleTuple)
+                scheduleIterator+=1
+                """
                 for lenSchedule in result:
                     if len(lenSchedule) == len(tasks)-currentLength:
                         possiblePartners.append(lenSchedule)
@@ -134,17 +142,19 @@ class ScheduleSplit:
                         if partners in result:    
                             result.remove(partners)
 
+                #everything above is dumb, rewrite
+                #use set - set to find corresponding schedule
                 if schedule == result[scheduleIterator]:     
 
                     scheduleIterator+=1
                     continue
 
-            scheduleIterator+=1
-        #for i in finalSchedules:
-        #    print(i)
-        #    _2, densityValue1 = density.densityCalcWFraction(i[0])
-        #    _1, densityValue2 = density.densityCalcWFraction(i[1])
-        #    print(_2,densityValue1," | ", _1,densityValue2)
+                #scheduleIterator+=1
+        for i in finalSchedules:
+            print(i)
+            #_2, densityValue1 = density.densityCalcWFraction(i[0])
+            #_1, densityValue2 = density.densityCalcWFraction(i[1])
+            #print(_2,densityValue1," | ", _1,densityValue2)
         #if len(finalSchedules) == 0:
         #    print(result)
         print(len(finalSchedules))
@@ -200,4 +210,19 @@ schedule: task 1 to task k
           task 1 goes to a, task 2 to b, so on and so on
 
 find a loose 2 pinwheel example
+
+
+
+--
+pareto surfaces not too interesting
+
+could try finding graph way
+
+pyton graph library - test for directed cycle
+
+https://github.com/roarin-roran/Towards-the-5-over-6-Density-Conjecture-of-Pinwheel-Scheduling/blob/a56bfd71bae773606de11614844fb6ae1c8f4a0c/solver_graph.py#L50
+https://www.wild-inter.net/publications/html/gasieniec-smith-wild-2022.pdf.html#pf3
+
+state graph - try to edge has passed, 2 tasks schedules - edge set different.
+--
 """
