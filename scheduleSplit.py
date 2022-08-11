@@ -105,8 +105,9 @@ class ScheduleSplit:
         #The code will have fully split all tasks into schedulable schedules.
         scheduleIterator = 0
         while scheduleIterator < len(result):
-            #taskCopy = tasks.copy()
+
             for schedule in result:
+                taskCopy = tasks.copy()
                 possiblePartners = []
                 currentLength = len(schedule)
                 """
@@ -118,6 +119,24 @@ class ScheduleSplit:
                 finalSchedules.append(scheduleTuple)
                 scheduleIterator+=1
                 """
+
+                """
+                for i in schedule:
+                    taskCopy.remove(i)
+                taskCopyCheck, densityValue = density.densityCalcWFraction(taskCopy)
+                if taskCopyCheck == "Schedulable":
+                    scheduleTuple = (schedule, taskCopy)
+                    finalSchedules.append(scheduleTuple)
+                    if schedule in result:
+                        result.remove(schedule)
+                    if taskCopy in result:    
+                        result.remove(taskCopy)
+                    scheduleIterator+=1
+                else:
+                    scheduleIterator+=1
+                """
+                
+                
                 for lenSchedule in result:
                     if len(lenSchedule) == len(tasks)-currentLength:
                         possiblePartners.append(lenSchedule)
@@ -156,7 +175,7 @@ class ScheduleSplit:
             #_1, densityValue2 = density.densityCalcWFraction(i[1])
             #print(_2,densityValue1," | ", _1,densityValue2)
         #if len(finalSchedules) == 0:
-        #    print(result)
+            #print(result)
         print(len(finalSchedules))
         #print("Success")
 
