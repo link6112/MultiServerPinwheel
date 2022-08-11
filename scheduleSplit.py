@@ -65,17 +65,26 @@ class ScheduleSplit:
             individualDensities[i] = den
             individualDensityList.append(den)
         target = Fraction(5, 6) #5/6 density goal
-        print("passed creation")
+        target2 = Fraction(3, 6)
+        #print("passed creation")
 
         #This use of itertools gives ALL possible combinations of densities that are equal to
         #or below 5/6
         result = [seq for i in range(0, len(individualDensityList)) 
                     for seq in itertools.combinations(individualDensityList, i) 
-                    if sum(seq) <= target]
+                    if sum(seq) <= target and sum(seq) >= target2]
+
+        ##
+        #bitvector of size n, iterate over all possible bits
+        #is element in subset a, yes if a, no if b.
+
+        #10/6
+        ##
+
         print("original length: ", len(result))
         result = list(set(result))
         print("optimised length: ",len(result))
-        print("passed itertools")
+        #print("passed itertools")
 
 
         #This code matches each density to its corresponding number and finds all possible combinations with their actual digits
@@ -83,7 +92,7 @@ class ScheduleSplit:
             result[j] = list(result[j])            
             for k in range(0, len(result[j])):
                 result[j][k] = list(individualDensities.keys())[list(individualDensities.values()).index(result[j][k])]
-
+        #print(result)
 
         #This code is relatively complicated.
         #It will iterate over every single combination, it will check to see if a partner exists.
@@ -96,7 +105,7 @@ class ScheduleSplit:
         #The code will have fully split all tasks into schedulable schedules.
         scheduleIterator = 0
         while scheduleIterator < len(result):
-            taskCopy = tasks.copy()
+            #taskCopy = tasks.copy()
             for schedule in result:
                 possiblePartners = []
                 currentLength = len(schedule)
@@ -131,8 +140,8 @@ class ScheduleSplit:
                     continue
 
             scheduleIterator+=1
-        for i in finalSchedules:
-            print(i)
+        #for i in finalSchedules:
+        #    print(i)
         #    _2, densityValue1 = density.densityCalcWFraction(i[0])
         #    _1, densityValue2 = density.densityCalcWFraction(i[1])
         #    print(_2,densityValue1," | ", _1,densityValue2)
@@ -149,18 +158,18 @@ class ScheduleSplit:
 
 Task1 = ScheduleSplit()
 
-#Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
+Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
 #Task1.densityCheck([2,2,3,3])
 #Task1.densityCheck([6, 8, 10, 12, 14, 16, 18, 18])
 k=1
-while k <= 1:
-    schedule = scheduleGenerator.scheduleGen()
-    if isinstance(schedule, list): 
-        Task1.densityCheck(schedule)
-        print(schedule)
-    else:
-        continue
-    k +=1
+#while k <= 1:
+#    schedule = scheduleGenerator.scheduleGen()
+#    if isinstance(schedule, list): 
+#        Task1.densityCheck(schedule)
+#        print(schedule)
+#    else:
+#        continue
+#    k +=1
 
 #TODO
 ###################################################################
@@ -173,3 +182,22 @@ while k <= 1:
 ##Sat - Break                                                    ##
 ##Sun - Unknown                                                  ##
 ###################################################################
+
+
+
+"""
+Where to go next:
+Care that both get a feasible sub problem
+Allow schedules where 5/6 and 1 is possible
+
+find pinwheel where density is between 5/6 and 1, and under 5/6
+
+try to make pareto surface 10/6
+assign each task a or b, 2 schedules for 2 instances 
+
+schedule: task 1 to task k
+          schedule just says there's those tasks.
+          task 1 goes to a, task 2 to b, so on and so on
+
+find a loose 2 pinwheel example
+"""

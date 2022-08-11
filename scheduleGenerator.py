@@ -10,7 +10,7 @@ import density
 def scheduleGen():
 
     k = Fraction(10/6)
-    a = np.random.dirichlet(np.ones(14), size=1)[0]*(k)
+    a = np.random.dirichlet(np.ones(12), size=1)[0]*(k)
 
 
     for i in range(0, len(a)):
