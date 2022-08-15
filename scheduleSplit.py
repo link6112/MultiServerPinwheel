@@ -149,7 +149,7 @@ class ScheduleSplit:
                 scheduleCheck.sort()
                 #print(scheduleCheck)
                 if scheduleCheck == tasks:
-                    if taskCopyCheck == "Schedulable":
+                    if taskCopyCheck == "Schedulable" and splitType != "11/6":
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1
@@ -161,7 +161,7 @@ class ScheduleSplit:
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1
-                    elif taskCopyCheck == "Splittable" and splitType == "11/6" and scheduleDensityCheck == "Schedulable":
+                    elif taskCopyCheck == "Splittable" and splitType == "11/6" and scheduleDensityCheck == "Splittable":
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1                       
@@ -243,12 +243,12 @@ Task1 = ScheduleSplit()
 
 k=1
 while k <= 1:
-    schedule = scheduleGenerator.scheduleGen("10/6")
-    #schedule = scheduleGenerator.scheduleGen("11/6")
+    #schedule = scheduleGenerator.scheduleGen("10/6")
+    schedule = scheduleGenerator.scheduleGen("11/6")
     if isinstance(schedule, list): 
-        Task1.densityCheck(schedule, "5/6+5/6")
+        #Task1.densityCheck(schedule, "5/6+5/6")
         #Task1.densityCheck(schedule, "<5/6+1")
-        #Task1.densityCheck(schedule, "11/6")
+        Task1.densityCheck(schedule, "11/6")
         print(schedule)
     else:
         continue

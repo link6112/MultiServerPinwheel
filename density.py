@@ -18,6 +18,7 @@ if __name__ == "__main__":
     t2 = [2, 8, 12, 16, 18]
     t3 = [2, 6, 2, 4, 3, 3, 131, 14]
     t3 = [2, 3, 5, 5, 5, 7, 9, 11, 13, 30, 52, 52]
+    t3 = [3, 3, 5, 6, 8, 9, 14, 14, 15, 19]
     #print(densityCalcWFraction(t1))
     print(densityCalcWFraction(t3))
 
