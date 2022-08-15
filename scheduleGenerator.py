@@ -7,10 +7,13 @@ import density
 
 #a = np.random.dirichlet(np.ones(12),size=1)
 #print(np.sum(a))
-def scheduleGen():
+def scheduleGen(density):
 
     k = Fraction(10/6)
-    a = np.random.dirichlet(np.ones(12), size=1)[0]*(k)
+    if density == "10/6":
+        a = np.random.dirichlet(np.ones(16), size=1)[0]*(k)
+    elif density == "11/6":
+        a = np.random.dirichlet(np.ones(16), size=1)[0]*(k)
 
 
     for i in range(0, len(a)):
