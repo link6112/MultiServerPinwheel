@@ -26,17 +26,21 @@ class ScheduleSplit:
         Returns: None
         """
         densityCheck, densityValue = density.densityCalcWFraction(tasks)
-        if densityCheck == "Schedulable":
-            print("Density 5/6 or below\nDensity = " + str(densityValue))
-            return
-        elif densityCheck == "Splittable":
-            print("Splitting")
+        if splitType == "5/6+5/6" or splitType == "<5/6+1":
+            if densityCheck == "Schedulable":
+                print("Density 5/6 or below\nDensity = " + str(densityValue))
+                return
+            elif densityCheck == "Splittable":
+                print("Splitting")
 
+                self.split(tasks, splitType)
+
+                return
+            else:
+                print("Didn't work")
+                return
+        elif splitType == "11/6":
             self.split(tasks, splitType)
-
-            return
-        else:
-            return
         
     def split(self, tasks, splitType):
         """
@@ -86,6 +90,7 @@ class ScheduleSplit:
                         for seq in itertools.combinations(individualDensityList, i) 
                         if sum(seq) <= target and sum(seq) >= target2]
         elif splitType == "11/6":
+            print("11/6 splitting")
             for i in tasks:
                 den = Fraction(1,i)
                 individualDensities[i] = den
@@ -135,6 +140,7 @@ class ScheduleSplit:
                 for i in schedule:
                     taskCopy.remove(i)
                 taskCopyCheck, densityValue = density.densityCalcWFraction(taskCopy)
+                scheduleDensityCheck, _ = density.densityCalcWFraction(schedule)
                 scheduleCheck = []
                 for freq in taskCopy:
                     scheduleCheck.append(freq)
@@ -146,11 +152,19 @@ class ScheduleSplit:
                     if taskCopyCheck == "Schedulable":
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
+                        scheduleIterator+=1
                         #if schedule in result:
                         #    result.remove(schedule)
                         #if taskCopy in result:    
                         #    result.remove(taskCopy)
+                    elif (taskCopyCheck == "Splittable" and splitType == "<5/6+1"):
+                        scheduleTuple = (schedule, taskCopy)
+                        finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1
+                    elif taskCopyCheck == "Splittable" and splitType == "11/6" and scheduleDensityCheck == "Schedulable":
+                        scheduleTuple = (schedule, taskCopy)
+                        finalSchedules.append(scheduleTuple)
+                        scheduleIterator+=1                       
                     else:
                         scheduleIterator+=1
                 else:
@@ -197,14 +211,21 @@ class ScheduleSplit:
             count +=1
             _1, densityValue1 = density.densityCalcWFraction(i[0])
             _2, densityValue2 = density.densityCalcWFraction(i[1])
-            print(_1,densityValue1," | ", _2,densityValue2)
+            #print(_1,densityValue1," | ", _2,densityValue2)
+            """
             if _1 == "Splittable":
                 print(i[0])
+                #print("Using solver naive")
                 #solver = solver_naive.solver_naive(i[0], False, True)
                 #solver.solve()
+                print("Using solver opt")
                 solver = solver_opt.PinwheelSolver(i[0], False, True)
                 solver.solve()
-
+            if _2 == "Splittable":
+                print(i[1])
+                solver = solver_opt.PinwheelSolver(i[1], False, True)
+                solver.solve()
+            """
 
 
         print(len(finalSchedules))
@@ -218,13 +239,16 @@ class ScheduleSplit:
 Task1 = ScheduleSplit()
 
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
-Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
+#Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
 
-k=2
+k=1
 while k <= 1:
-    schedule = scheduleGenerator.scheduleGen()
+    schedule = scheduleGenerator.scheduleGen("10/6")
+    #schedule = scheduleGenerator.scheduleGen("11/6")
     if isinstance(schedule, list): 
         Task1.densityCheck(schedule, "5/6+5/6")
+        #Task1.densityCheck(schedule, "<5/6+1")
+        #Task1.densityCheck(schedule, "11/6")
         print(schedule)
     else:
         continue

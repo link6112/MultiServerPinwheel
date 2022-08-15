@@ -7,32 +7,46 @@ import density
 
 #a = np.random.dirichlet(np.ones(12),size=1)
 #print(np.sum(a))
-def scheduleGen(density):
+def scheduleGen(selectedDensity):
 
     k = Fraction(10/6)
-    if density == "10/6":
-        a = np.random.dirichlet(np.ones(16), size=1)[0]*(k)
-    elif density == "11/6":
-        a = np.random.dirichlet(np.ones(16), size=1)[0]*(k)
+    if selectedDensity == "10/6":
+        k = Fraction(10/6)
+        a = np.random.dirichlet(np.ones(10), size=1)[0]*(k)
+    elif selectedDensity == "11/6":
+        k = Fraction(11/6)
+        a = np.random.dirichlet(np.ones(12), size=1)[0]*(k)
 
-
-    for i in range(0, len(a)):
-        b = 1/a[i]
-        a[i] = round(b)
-
-    a.sort()
-    a = a.tolist()
-    denCheck, densityValue = density.densityCalcWFraction(a)
-    if denCheck == False:
-        #print(densityValue)
-        return False
+    if selectedDensity == "10/6":
+        for i in range(0, len(a)):
+            b = 1/a[i]
+            a[i] = round(b)
+        #print(a)
+        a.sort()
+        a = a.tolist()
+        denCheck, densityValue = density.densityCalcWFraction(a)
+        if denCheck == False:
+            #print(densityValue)
+            return False
+        else:
+            return a
     else:
         #print(a)
-        return a
+        for i in range(0, len(a)):
+            b = 1/a[i]
+            a[i] = round(b)
+        #print(a)
+        a.sort()
+        a = a.tolist()
+        denCheck, densityValue = density.densityCalcWFraction(a)
+        if densityValue <= Fraction(11/6):
+            return False
+        else:
+            return a
     #print(a)
     #print(type(a))
 if __name__ == "__main__":
-    test = scheduleGen()
+    test = scheduleGen("11/6")
     if test == False:
         print("didn't work")
     else:
