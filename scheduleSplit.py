@@ -7,6 +7,7 @@ import scheduleGenerator
 from collections import OrderedDict
 import solver_naive
 import solver_opt
+import solver_foresight
 test="printstatementcheck"#The goal of this code is to create 2 sets of tasks with
 #density less than 5/6
 
@@ -209,23 +210,28 @@ class ScheduleSplit:
         for i in finalSchedules:
             #print(i)
             count +=1
-            _1, densityValue1 = density.densityCalcWFraction(i[0])
-            _2, densityValue2 = density.densityCalcWFraction(i[1])
-            #print(_1,densityValue1," | ", _2,densityValue2)
-            """
-            if _1 == "Splittable":
-                print(i[0])
-                #print("Using solver naive")
-                #solver = solver_naive.solver_naive(i[0], False, True)
-                #solver.solve()
-                print("Using solver opt")
-                solver = solver_opt.PinwheelSolver(i[0], False, True)
-                solver.solve()
-            if _2 == "Splittable":
-                print(i[1])
-                solver = solver_opt.PinwheelSolver(i[1], False, True)
-                solver.solve()
-            """
+            _1, densityValue1 = density.densityCalcPostSplit(i[0])
+            _2, densityValue2 = density.densityCalcPostSplit(i[1])
+            if _1 == "Possibly Solvable" and _2 == "Possibly Solvable":
+                print(_1,densityValue1," | ", _2,densityValue2)
+                print(i)
+            
+                if _1 == "Possibly Solvable":
+                    print(i[0])
+                    #print("Using solver naive")
+                    #solver = solver_naive.solver_naive(i[0], False, True)
+                    #solver.solve()
+                    print("Using solver foresight")
+                    solver = solver_foresight.solver_foresight(i[0], False, True, False)
+                    solver.solve()
+                if _2 == "Possibly Solvable":
+                    print(i[1])
+                    solver = solver_foresight.solver_foresight(i[1], False, True, False)
+                    solver.solve()
+
+            elif _1 == "Schedulable" and _2 == "Schedulable":
+                print(_1,densityValue1," | ", _2,densityValue2)
+                #print(i)
 
 
         print(len(finalSchedules))
@@ -243,12 +249,12 @@ Task1 = ScheduleSplit()
 
 k=1
 while k <= 1:
-    #schedule = scheduleGenerator.scheduleGen("10/6")
-    schedule = scheduleGenerator.scheduleGen("11/6")
+    schedule = scheduleGenerator.scheduleGen("10/6")
+    #schedule = scheduleGenerator.scheduleGen("11/6")
     if isinstance(schedule, list): 
-        #Task1.densityCheck(schedule, "5/6+5/6")
+        Task1.densityCheck(schedule, "5/6+5/6")
         #Task1.densityCheck(schedule, "<5/6+1")
-        Task1.densityCheck(schedule, "11/6")
+        #Task1.densityCheck(schedule, "11/6")
         print(schedule)
     else:
         continue

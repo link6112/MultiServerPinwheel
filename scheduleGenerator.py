@@ -15,7 +15,7 @@ def scheduleGen(selectedDensity):
         a = np.random.dirichlet(np.ones(10), size=1)[0]*(k)
     elif selectedDensity == "11/6":
         k = Fraction(11/6)
-        a = np.random.dirichlet(np.ones(12), size=1)[0]*(k)
+        a = np.random.dirichlet(np.ones(8), size=1)[0]*(k)
 
     if selectedDensity == "10/6":
         for i in range(0, len(a)):
