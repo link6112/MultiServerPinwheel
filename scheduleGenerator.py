@@ -16,8 +16,12 @@ def scheduleGen(selectedDensity):
     elif selectedDensity == "11/6":
         k = Fraction(11/6)
         a = np.random.dirichlet(np.ones(8), size=1)[0]*(k)
-
-    if selectedDensity == "10/6":
+    elif selectedDensity == "graph":
+        #print("here")
+        k = Fraction(10/6)
+        #print(k)
+        a = np.random.dirichlet(np.ones(5), size=1)[0]*(k)
+    if selectedDensity == "10/6" or selectedDensity == "graph":
         for i in range(0, len(a)):
             b = 1/a[i]
             a[i] = round(b)
@@ -25,9 +29,13 @@ def scheduleGen(selectedDensity):
         a.sort()
         a = a.tolist()
         denCheck, densityValue = density.densityCalcWFraction(a)
-        if denCheck == False:
-            #print(densityValue)
+        #print(a)
+        if selectedDensity == "graph":
+            return a
+        elif denCheck == False:
+            print(densityValue)
             return False
+
         else:
             return a
     else:

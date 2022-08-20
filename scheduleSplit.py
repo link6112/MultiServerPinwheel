@@ -1,16 +1,18 @@
-from pickletools import read_unicodestringnl
 import scheduleGenerator
 import density
 from fractions import Fraction
 import itertools
 import scheduleGenerator
 from collections import OrderedDict
-import solver_naive
-import solver_opt
 import solver_foresight
-test="printstatementcheck"#The goal of this code is to create 2 sets of tasks with
-#density less than 5/6
+test="printstatementcheck"
 
+
+
+
+
+#The goal of this code is to create 2 sets of tasks with
+#density less than 5/6
 class ScheduleSplit:
     def __init__(self):
         return
@@ -61,7 +63,6 @@ class ScheduleSplit:
 
         #Creates a list of the densities of each task.
         #Can return to:
-
         if splitType == "5/6+5/6":
             for i in tasks:
                 den = Fraction(1,i)
@@ -133,8 +134,8 @@ class ScheduleSplit:
 
             for schedule in result:
                 taskCopy = tasks.copy()
-                possiblePartners = []
-                currentLength = len(schedule)
+                #possiblePartners = []
+                #currentLength = len(schedule)
 
 
                 
@@ -148,6 +149,7 @@ class ScheduleSplit:
                 for freq in schedule:
                     scheduleCheck.append(freq)
                 scheduleCheck.sort()
+
                 #print(scheduleCheck)
                 if scheduleCheck == tasks:
                     if taskCopyCheck == "Schedulable" and splitType != "11/6":
@@ -172,47 +174,21 @@ class ScheduleSplit:
                     scheduleIterator+=1
 
                 
-                
-                """
-                for lenSchedule in result:
-                    if len(lenSchedule) == len(tasks)-currentLength:
-                        possiblePartners.append(lenSchedule)
-                    else:
-                        continue
 
-                for partners in possiblePartners:
-                    partnerCheck = []
-                    for partnerTask in partners:
-                        partnerCheck.append(partnerTask)
-                    for task in schedule:
-                        partnerCheck.append(task)
-                    partnerCheck.sort()
 
-                    if partnerCheck == tasks:
-                        scheduleTuple = (schedule,partners)
-                        finalSchedules.append(scheduleTuple)
-
-                        #UNSURE HERE - CHECK
-                        if schedule in result:
-                            result.remove(schedule)
-                        if partners in result:    
-                            result.remove(partners)
-
-                #everything above is dumb, rewrite
-                #use set - set to find corresponding schedule
-                if schedule == result[scheduleIterator]:     
-
-                    scheduleIterator+=1
-                    continue"""
-
-                #scheduleIterator+=1
         count = 0
         for i in finalSchedules:
             #print(i)
             count +=1
+
             _1, densityValue1 = density.densityCalcPostSplit(i[0])
             _2, densityValue2 = density.densityCalcPostSplit(i[1])
-            if _1 == "Possibly Solvable" and _2 == "Possibly Solvable":
+            #if _1 == "Possibly Solvable" or _2 == "Possibly Solvable":
+            #    print(i)
+            #    print(_1,densityValue1," | ", _2,densityValue2)
+
+    
+            if (_1 == "Possibly Solvable" and _2 == "Possibly Solvable") and splitType == "11/6":
                 print(_1,densityValue1," | ", _2,densityValue2)
                 print(i)
             
@@ -229,7 +205,29 @@ class ScheduleSplit:
                     solver = solver_foresight.solver_foresight(i[1], False, True, False)
                     solver.solve()
 
-            elif _1 == "Schedulable" and _2 == "Schedulable":
+            elif _1 == "Schedulable" and _2 == "Schedulable" and splitType == "11/6":
+                print(_1,densityValue1," | ", _2,densityValue2)
+                #print(i)
+
+
+            if (_1 == "Possibly Solvable" or _2 == "Possibly Solvable") and splitType == "<5/6+1":
+                print(_1,densityValue1," | ", _2,densityValue2)
+                print(i)
+            
+                if _1 == "Possibly Solvable":
+                    print(i[0])
+                    #print("Using solver naive")
+                    #solver = solver_naive.solver_naive(i[0], False, True)
+                    #solver.solve()
+                    print("Using solver foresight")
+                    solver = solver_foresight.solver_foresight(i[0], False, True, False)
+                    solver.solve()
+                if _2 == "Possibly Solvable":
+                    print(i[1])
+                    solver = solver_foresight.solver_foresight(i[1], False, True, False)
+                    solver.solve()
+
+            elif _1 == "Schedulable" and _2 == "Schedulable" and splitType =="<5/6+1":
                 print(_1,densityValue1," | ", _2,densityValue2)
                 #print(i)
 
@@ -243,17 +241,17 @@ class ScheduleSplit:
 
 
 Task1 = ScheduleSplit()
-
+#Task1.densityCheck([3, 4, 6, 7], "5/6+5/6")
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
 
-k=1
-while k <= 1:
+k=0
+while k <= 10:
     schedule = scheduleGenerator.scheduleGen("10/6")
     #schedule = scheduleGenerator.scheduleGen("11/6")
     if isinstance(schedule, list): 
-        Task1.densityCheck(schedule, "5/6+5/6")
-        #Task1.densityCheck(schedule, "<5/6+1")
+        #Task1.densityCheck(schedule, "5/6+5/6")
+        Task1.densityCheck(schedule, "<5/6+1")
         #Task1.densityCheck(schedule, "11/6")
         print(schedule)
     else:
@@ -262,13 +260,13 @@ while k <= 1:
 
 #TODO
 ###################################################################
-##Mon - Rewrite main code                                        ##
-##Tue - Work with ben 5/6 + 1                                   ##
-##Wed - find 5/6 + 5/6 or 5/6 + 1 that isn't poss                ##
-##Thu - Loose pinwheel                                           ##
-##Fri - Graph loose                                              ##
-##Sat - Break                                                    ##
-##Sun - Unknown                                                  ##
+##Mon 22nd - Loose Pinwheel                                      ##
+##Tue 23rd - Slides - Check program                              ##
+##Wed 24th - Slides - Check program                              ##
+##Thu 25th - SUBMIT                                              ##
+##Fri - Loose pinwheel                                           ##
+##Sat - Loose Pinwheel                                           ##
+##Sun - Fix prints                                               ##
 ###################################################################
 
 

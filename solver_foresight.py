@@ -876,7 +876,7 @@ class solver_foresight:
     # when the bug is fixed, so that they can be used to fix the next bug.
     @staticmethod
     def runBugFixingCases():
-        oursolver_foresight = solver_foresight([2], True, True, False)  # 0
+        oursolver_foresight = solver_foresight([2, 4, 17, 20], False, True, False)  # 0
         print(oursolver_foresight.solve())
 
-#solver_foresight.runBugFixingCases()
+solver_foresight.runBugFixingCases()
