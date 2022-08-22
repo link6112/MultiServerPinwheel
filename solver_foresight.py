@@ -879,4 +879,4 @@ class solver_foresight:
         oursolver_foresight = solver_foresight([2, 4, 17, 20], False, True, False)  # 0
         print(oursolver_foresight.solve())
 
-solver_foresight.runBugFixingCases()
+#solver_foresight.runBugFixingCases()

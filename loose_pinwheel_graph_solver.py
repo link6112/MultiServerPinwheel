@@ -2,6 +2,9 @@ import networkx as nx
 import time
 import itertools
 import scheduleGenerator
+import scheduleSplit
+import density
+import solver_foresight
 
 
 class loose_solver_graph:
@@ -85,41 +88,99 @@ class loose_solver_graph:
         if len(max(nx.algorithms.components.strongly_connected_components(self.directedGraph), key=len)) > 1:
             print(self.tasks, " is strongly connected! - solvable")
             self.solveTimeCost = time.time() - startTime	
-            return True
+            return True, self.tasks
         else:
             print(self.tasks, " is not strongly connected - unsolvable")
             self.solveTimeCost = time.time() - startTime
-            return False 
+            return False, self.tasks
             
 
+def runTestsLooseWins():
+    k=0
+    while k <= 1000:
+        #print("Hello?") 
+        schedule = scheduleGenerator.scheduleGen("graph")
+        #print(schedule)
+        #schedule = scheduleGenerator.scheduleGen("11/6")
+        run = True
+        for task in schedule:
+            if task > 25:
+                run = False
+        if isinstance(schedule, list) and run == True:
+            splitter = scheduleSplit.ScheduleSplit
+            solver = loose_solver_graph(schedule)
+            #print(schedule)
+            solved, task = solver.solve()
+            if solved == True:
+                print("SUCCESS")
+                print(solver.solveTimeCost)
+                schedule = splitter.split(splitter, list(task), "<5/6+1")
 
-k=0
-while k <= 1000:
-    #print("Hello?") 
-    schedule = scheduleGenerator.scheduleGen("graph")
-    #print(schedule)
-    #schedule = scheduleGenerator.scheduleGen("11/6")
-    run = True
-    for task in schedule:
-        if task > 25:
-            run = False
-    if isinstance(schedule, list) and run == True:
+                print(len(schedule))
 
-        solver = loose_solver_graph(schedule)
-        print(schedule)
-        l = solver.solve()
-        if l == True:
-            print("SUCCESS")
-            print(solver.solveTimeCost)
+                for i in schedule:
+                    solved0 = 0
+                    solved1 = 0
+                    taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
+                    taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
+
+
+                    solverForesight0 = solver_foresight.solver_foresight(i[0], False, False, False)
+                    solverForesight1 = solver_foresight.solver_foresight(i[1], False, False, False)
+
+                    solved0 = solverForesight0.solve()
+                    solved1 = solverForesight1.solve()
+                    if solved0 == -1 and solved1 == -1:
+                        print(i[0], i[1])
+                        k = 10000
+                        break
+                    elif taskStatus1 == "Not Solvable" and solved0 == -1:
+                        print(i[0], i[1])
+                        k = 10000
+                        break
+                    elif taskStatus0 == "Not Solvable" and solved1 == -1:
+                        print(i[0], i[1])
+                        k = 10000
+                        break
+            else:
+                print("BOOOO")
+                print(solver.solveTimeCost)
+    return
+
+def runTestsLooseOnly():
+    k=0
+    while k <= 1000:
+        #print("Hello?") 
+        schedule = scheduleGenerator.scheduleGen("graph")
+        #print(schedule)
+        #schedule = scheduleGenerator.scheduleGen("11/6")
+        run = True
+        for task in schedule:
+            if task > 25:
+                run = False
+        if isinstance(schedule, list) and run == True:
+            splitter = scheduleSplit.ScheduleSplit
+            solver = loose_solver_graph(schedule)
+            print(schedule)
+            solved, task = solver.solve()
         else:
             print("BOOOO")
             print(solver.solveTimeCost)
+    return
+        
+
         #print(schedule)
 
     k += 1
-ourPGS = loose_solver_graph([3, 4, 6, 7, 7])
-ourPGS.solve()
-print(ourPGS.solveTimeCost)
+
+
+runTestsLooseWins()
+#[2, 3] [2, 3, 6]
+#[2,2,3,3,6]
+#ourPGS = loose_solver_graph([3, 4, 6, 7, 7])
+#ourPGS = loose_solver_graph([2, 2, 3, 3, 6])
+#ourPGS.solve()
+#print(ourPGS.solveTimeCost)
 
 """Every edge represent the passing of one day. 
 The configuration/state represents the number of days for each task until it has to be done again. 

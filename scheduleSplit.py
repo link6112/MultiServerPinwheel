@@ -164,7 +164,7 @@ class ScheduleSplit:
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1
-                    elif taskCopyCheck == "Splittable" and splitType == "11/6" and scheduleDensityCheck == "Splittable":
+                    elif splitType == "11/6":
                         scheduleTuple = (schedule, taskCopy)
                         finalSchedules.append(scheduleTuple)
                         scheduleIterator+=1                       
@@ -177,94 +177,100 @@ class ScheduleSplit:
 
 
         count = 0
-        for i in finalSchedules:
-            #print(i)
-            count +=1
-
-            taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
-            taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
-            #print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-            #if taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable":
-            #    print(i)
-            #    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-
-
-
-            ####
-            #The code below are different print statements for multiple situations which can be
-            #"Possibly Solvable" indicates that the set of tasks is over 5/6 but below 1 in density
-            #schedulable means it's below 5/6.
-
-            ####
-            
-            if (taskStatus0 == "Possibly Solvable" and taskStatus1 == "Possibly Solvable") and splitType == "11/6":
-                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-                #print(i)
-            
-                if taskStatus0 == "Possibly Solvable":
-                    print(i[0])
-
-                    print("Using solver foresight")
-                    solver = solver_foresight.solver_foresight(i[0], False, True, False)
-                    solver.solve()
-                if taskStatus1 == "Possibly Solvable":
-                    print(i[1])
-                    solver = solver_foresight.solver_foresight(i[1], False, True, False)
-                    solver.solve()
-
-            elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType == "11/6":
-                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-                #print(i)
-
-
-            if (taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable") and splitType == "<5/6+1":
-                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+        if __name__ == "__main__":
+            for i in finalSchedules:
                 print(i)
-            
-                if taskStatus0 == "Possibly Solvable":
-                    print(i[0])
+                count +=1
 
-                    print("Using solver foresight")
-                    solver = solver_foresight.solver_foresight(i[0], False, True, False)
-                    solver.solve()
-                if taskStatus1 == "Possibly Solvable":
-                    print(i[1])
-                    solver = solver_foresight.solver_foresight(i[1], False, True, False)
-                    solver.solve()
-
-            elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType =="<5/6+1":
-                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-                #print(i)
-            
-
-        print(len(finalSchedules))
+                taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
+                taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
+                #print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                #if taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable":
+                    #print(i)
+                    #print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
 
 
 
+                ####
+                #The code below are different print statements for multiple situations which can be
+                #"Possibly Solvable" indicates that the set of tasks is over 5/6 but below 1 in density
+                #schedulable means it's below 5/6.
+
+                ####
+
+                if (taskStatus0 == "Possibly Solvable" and taskStatus1 == "Possibly Solvable") and splitType == "11/6":
+                    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    #print(i)
+                
+                    if taskStatus0 == "Possibly Solvable":
+                        print(i[0])
+
+                        print("Using solver foresight")
+                        solver = solver_foresight.solver_foresight(i[0], False, True, False)
+                        solver.solve()
+                    if taskStatus1 == "Possibly Solvable":
+                        print(i[1])
+                        solver = solver_foresight.solver_foresight(i[1], False, True, False)
+                        solver.solve()
+
+                else:
+                    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    
+
+
+                if (taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable") and splitType == "<5/6+1":
+                    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    print(i)
+                
+                    if taskStatus0 == "Possibly Solvable":
+                        print(i[0])
+
+                        print("Using solver foresight")
+                        solver = solver_foresight.solver_foresight(i[0], False, True, False)
+                        solver.solve()
+                    if taskStatus1 == "Possibly Solvable":
+                        print(i[1])
+                        solver = solver_foresight.solver_foresight(i[1], False, True, False)
+                        solver.solve()
+
+                elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType =="<5/6+1":
+                    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    #print(i)
+                
+
+            print(len(finalSchedules))
+        return finalSchedules
 
 
 
 
-Task1 = ScheduleSplit()
-
-#Density less than 12/6, possibly solvable based on all under density 1 and above density 5/6 can be solved.
-#not possible in loose pinwheel either.
-Task1.densityCheck([1,2,5,7,9], "11/6")
 
 
-#Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
-#Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
+if __name__ == "__main__":
+    Task1 = ScheduleSplit()
 
-k=11
-while k <= 10:
-    schedule = scheduleGenerator.scheduleGen("11/6")
-    #schedule = scheduleGenerator.scheduleGen("11/6")
-    if isinstance(schedule, list): 
-        #Task1.densityCheck(schedule, "5/6+5/6")
-        #Task1.densityCheck(schedule, "<5/6+1")
-        Task1.densityCheck(schedule, "11/6")
-        print(schedule)
-    else:
-        continue
-    k +=1
+    #Density less than 12/6, possibly solvable based on all under density 1 and above density 5/6 can be solved.
+    #not possible in loose pinwheel either.
+    #Task1.densityCheck([1,2,5,7,9], "11/6")
+
+
+    #Task1.densityCheck([2, 2, 3, 3, 6], "11/6")
+
+
+
+    #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
+    #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
+
+    k=11
+    while k <= 10:
+        schedule = scheduleGenerator.scheduleGen("11/6")
+        #schedule = scheduleGenerator.scheduleGen("11/6")
+        if isinstance(schedule, list): 
+            #Task1.densityCheck(schedule, "5/6+5/6")
+            #Task1.densityCheck(schedule, "<5/6+1")
+            Task1.densityCheck(schedule, "11/6")
+            print(schedule)
+        else:
+            continue
+        k +=1
 
