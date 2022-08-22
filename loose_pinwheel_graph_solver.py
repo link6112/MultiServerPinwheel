@@ -104,7 +104,7 @@ def runTestsLooseWins():
         #schedule = scheduleGenerator.scheduleGen("11/6")
         run = True
         for task in schedule:
-            if task > 25:
+            if task > 35:
                 run = False
         if isinstance(schedule, list) and run == True:
             splitter = scheduleSplit.ScheduleSplit
@@ -145,6 +145,7 @@ def runTestsLooseWins():
             else:
                 print("BOOOO")
                 print(solver.solveTimeCost)
+            #k+=1
     return
 
 def runTestsLooseOnly():
@@ -166,6 +167,7 @@ def runTestsLooseOnly():
         else:
             print("BOOOO")
             print(solver.solveTimeCost)
+    k += 1
     return
         
 
@@ -178,7 +180,7 @@ runTestsLooseWins()
 #[2, 3] [2, 3, 6]
 #[2,2,3,3,6]
 #ourPGS = loose_solver_graph([3, 4, 6, 7, 7])
-#ourPGS = loose_solver_graph([2, 2, 3, 3, 6])
+#ourPGS = loose_solver_graph([2, 2, 3, 3, 11, 32])
 #ourPGS.solve()
 #print(ourPGS.solveTimeCost)
 

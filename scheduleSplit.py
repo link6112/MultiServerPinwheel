@@ -256,6 +256,8 @@ if __name__ == "__main__":
 
     #Task1.densityCheck([2, 2, 3, 3, 6], "11/6")
 
+    Task1.densityCheck([2, 2, 3, 3, 11, 32], "11/6")
+
 
 
     #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
