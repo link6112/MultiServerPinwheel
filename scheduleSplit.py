@@ -181,56 +181,61 @@ class ScheduleSplit:
             #print(i)
             count +=1
 
-            _1, densityValue1 = density.densityCalcPostSplit(i[0])
-            _2, densityValue2 = density.densityCalcPostSplit(i[1])
-            #if _1 == "Possibly Solvable" or _2 == "Possibly Solvable":
+            taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
+            taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
+            #print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+            #if taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable":
             #    print(i)
-            #    print(_1,densityValue1," | ", _2,densityValue2)
+            #    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
 
-    
-            if (_1 == "Possibly Solvable" and _2 == "Possibly Solvable") and splitType == "11/6":
-                print(_1,densityValue1," | ", _2,densityValue2)
-                print(i)
+
+
+            ####
+            #The code below are different print statements for multiple situations which can be
+            #"Possibly Solvable" indicates that the set of tasks is over 5/6 but below 1 in density
+            #schedulable means it's below 5/6.
+
+            ####
             
-                if _1 == "Possibly Solvable":
+            if (taskStatus0 == "Possibly Solvable" and taskStatus1 == "Possibly Solvable") and splitType == "11/6":
+                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                #print(i)
+            
+                if taskStatus0 == "Possibly Solvable":
                     print(i[0])
-                    #print("Using solver naive")
-                    #solver = solver_naive.solver_naive(i[0], False, True)
-                    #solver.solve()
+
                     print("Using solver foresight")
                     solver = solver_foresight.solver_foresight(i[0], False, True, False)
                     solver.solve()
-                if _2 == "Possibly Solvable":
+                if taskStatus1 == "Possibly Solvable":
                     print(i[1])
                     solver = solver_foresight.solver_foresight(i[1], False, True, False)
                     solver.solve()
 
-            elif _1 == "Schedulable" and _2 == "Schedulable" and splitType == "11/6":
-                print(_1,densityValue1," | ", _2,densityValue2)
+            elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType == "11/6":
+                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
                 #print(i)
 
 
-            if (_1 == "Possibly Solvable" or _2 == "Possibly Solvable") and splitType == "<5/6+1":
-                print(_1,densityValue1," | ", _2,densityValue2)
+            if (taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable") and splitType == "<5/6+1":
+                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
                 print(i)
             
-                if _1 == "Possibly Solvable":
+                if taskStatus0 == "Possibly Solvable":
                     print(i[0])
-                    #print("Using solver naive")
-                    #solver = solver_naive.solver_naive(i[0], False, True)
-                    #solver.solve()
+
                     print("Using solver foresight")
                     solver = solver_foresight.solver_foresight(i[0], False, True, False)
                     solver.solve()
-                if _2 == "Possibly Solvable":
+                if taskStatus1 == "Possibly Solvable":
                     print(i[1])
                     solver = solver_foresight.solver_foresight(i[1], False, True, False)
                     solver.solve()
 
-            elif _1 == "Schedulable" and _2 == "Schedulable" and splitType =="<5/6+1":
-                print(_1,densityValue1," | ", _2,densityValue2)
+            elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType =="<5/6+1":
+                print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
                 #print(i)
-
+            
 
         print(len(finalSchedules))
 
@@ -241,64 +246,25 @@ class ScheduleSplit:
 
 
 Task1 = ScheduleSplit()
-#Task1.densityCheck([3, 4, 6, 7], "5/6+5/6")
+
+#Density less than 12/6, possibly solvable based on all under density 1 and above density 5/6 can be solved.
+#not possible in loose pinwheel either.
+Task1.densityCheck([1,2,5,7,9], "11/6")
+
+
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
 #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
 
-k=0
+k=11
 while k <= 10:
-    schedule = scheduleGenerator.scheduleGen("10/6")
+    schedule = scheduleGenerator.scheduleGen("11/6")
     #schedule = scheduleGenerator.scheduleGen("11/6")
     if isinstance(schedule, list): 
         #Task1.densityCheck(schedule, "5/6+5/6")
-        Task1.densityCheck(schedule, "<5/6+1")
-        #Task1.densityCheck(schedule, "11/6")
+        #Task1.densityCheck(schedule, "<5/6+1")
+        Task1.densityCheck(schedule, "11/6")
         print(schedule)
     else:
         continue
     k +=1
 
-#TODO
-###################################################################
-##Mon 22nd - Loose Pinwheel                                      ##
-##Tue 23rd - Slides - Check program                              ##
-##Wed 24th - Slides - Check program                              ##
-##Thu 25th - SUBMIT                                              ##
-##Fri - Loose pinwheel                                           ##
-##Sat - Loose Pinwheel                                           ##
-##Sun - Fix prints                                               ##
-###################################################################
-
-
-
-"""
-Where to go next:
-Care that both get a feasible sub problem
-monday - trueday : Allow schedules where 5/6 and 1 is possible
-
-all week: find pinwheel where density is between 5/6 and 1, and under 5/6
-
-try to make pareto surface 10/6
-assign each task a or b, 2 schedules for 2 instances 
-
-schedule: task 1 to task k
-          schedule just says there's those tasks.
-          task 1 goes to a, task 2 to b, so on and so on
-
-do by hand by sunday: find a loose 2 pinwheel example
-
-
-below: thursday and friday
---
-pareto surfaces not too interesting
-
-could try finding graph way
-
-pyton graph library - test for directed cycle
-
-https://github.com/roarin-roran/Towards-the-5-over-6-Density-Conjecture-of-Pinwheel-Scheduling/blob/a56bfd71bae773606de11614844fb6ae1c8f4a0c/solver_graph.py#L50
-https://www.wild-inter.net/publications/html/gasieniec-smith-wild-2022.pdf.html#pf3
-
-state graph - try to edge has passed, 2 tasks schedules - edge set different.
---
-"""
