@@ -176,16 +176,19 @@ def runTestsLooseOnly():
     k += 1
 
 
-runTestsLooseWins()
+#runTestsLooseWins()
 #[2, 3] [2, 3, 6]
 #[2,2,3,3,6]
+#ourPGS = loose_solver_graph([1,2,5,7,9])
 #ourPGS = loose_solver_graph([3, 4, 6, 7, 7])
-#ourPGS = loose_solver_graph([2, 2, 3, 3, 11, 32])
-#ourPGS.solve()
-#print(ourPGS.solveTimeCost)
+ourPGS = loose_solver_graph([2, 2, 3, 3, 11, 32])
+#ourPGS = loose_solver_graph([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
+ourPGS.solve()
+print(ourPGS.solveTimeCost)
 
 """Every edge represent the passing of one day. 
 The configuration/state represents the number of days for each task until it has to be done again. 
 Now for 2 pinwheel, each edge resets 2 task countdowns back to the frequency and counts down all others by one.
-If you have tasks (4,5,8) and a current state (4,2,2) (days until due), there are there edges (for the 3 choices of 2 out of 3 tasks), one to (4,5,1), one to (4,1,8) and one to (3,5,8)."""
+If you have tasks (4,5,8) and a current state (4,2,2) (days until due), there are there edges 
+(for the 3 choices of 2 out of 3 tasks), one to (4,5,1), one to (4,1,8) and one to (3,5,8)."""
     

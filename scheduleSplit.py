@@ -179,11 +179,15 @@ class ScheduleSplit:
         count = 0
         if __name__ == "__main__":
             for i in finalSchedules:
-                print(i)
+                #print(i)
                 count +=1
 
                 taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
                 taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
+
+                if splitType == "5/6+5/6":
+                    print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    print(i)
                 #print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
                 #if taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable":
                     #print(i)
@@ -198,9 +202,9 @@ class ScheduleSplit:
 
                 ####
 
-                if (taskStatus0 == "Possibly Solvable" and taskStatus1 == "Possibly Solvable") and splitType == "11/6":
+                if (taskStatus0 == "Possibly Solvable" or taskStatus1 == "Possibly Solvable") and splitType == "11/6":
                     print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-                    #print(i)
+                    print(i)
                 
                     if taskStatus0 == "Possibly Solvable":
                         print(i[0])
@@ -213,8 +217,9 @@ class ScheduleSplit:
                         solver = solver_foresight.solver_foresight(i[1], False, True, False)
                         solver.solve()
 
-                else:
+                elif splitType == "11/6":
                     print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
+                    print(i)
                     
 
 
@@ -235,7 +240,7 @@ class ScheduleSplit:
 
                 elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable" and splitType =="<5/6+1":
                     print(taskStatus0,densityValue1," | ", taskStatus1,densityValue2)
-                    #print(i)
+                    print(i)
                 
 
             print(len(finalSchedules))
@@ -254,9 +259,9 @@ if __name__ == "__main__":
     #Task1.densityCheck([1,2,5,7,9], "11/6")
 
 
-    #Task1.densityCheck([2, 2, 3, 3, 6], "11/6")
+    #Task1.densityCheck([2, 3, 3, 4, 4, 9, 17, 20], "11/6")
+    Task1.densityCheck([1, 3, 3, 5], "11/6")
 
-    Task1.densityCheck([2, 2, 3, 3, 11, 32], "11/6")
 
 
 
