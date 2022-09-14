@@ -5,7 +5,7 @@ import scheduleGenerator
 import scheduleSplit
 import density
 import solver_foresight
-
+import listGenerator
 
 class loose_solver_graph:
     def __init__(self, tasks):
@@ -78,6 +78,7 @@ class loose_solver_graph:
                             self.directedGraph.add_edge(tuple(inputState), tuple(newState))
 
                             unexploredStates.append(newState)
+                            #print(newState)
 
 
     def solve(self):
@@ -181,10 +182,46 @@ def runTestsLooseOnly():
 #[2,2,3,3,6]
 #ourPGS = loose_solver_graph([1,2,5,7,9])
 #ourPGS = loose_solver_graph([3, 4, 6, 7, 7])
-ourPGS = loose_solver_graph([2, 2, 3, 3, 11, 32])
+#ourPGS = loose_solver_graph([2, 2, 3, 3, 11, 32])
+#ourPGS = loose_solver_graph([16])
 #ourPGS = loose_solver_graph([2, 5, 6, 8, 10, 12, 14, 16, 18, 18])
-ourPGS.solve()
-print(ourPGS.solveTimeCost)
+allLists = listGenerator.listGenerator()
+solveCount = 0
+failCount = 0
+print(len(allLists))
+
+
+for i in allLists:
+    print("Starting testing")
+    print(i)
+
+    ourPGS = loose_solver_graph(i)
+    solved, _ = ourPGS.solve()
+    spliter = scheduleSplit.ScheduleSplit
+
+    # solved0 = 0
+    # solved1 = 0
+    # taskStatus0, densityValue1 = density.densityCalcPostSplit(i[0])
+    # taskStatus1, densityValue2 = density.densityCalcPostSplit(i[1])
+
+
+    # solverForesight0 = solver_foresight.solver_foresight(i[0], False, False, False)
+    # solverForesight1 = solver_foresight.solver_foresight(i[1], False, False, False)
+
+    # solved0 = solverForesight0.solve()
+    # solved1 = solverForesight1.solve()
+    if solved == True:
+        solveCount += 1
+    elif solved == False:
+        failCount +=1
+    
+    #if solved == True and (solved0 != 1 and taskStatus0)
+
+print("Graph solver fail:", failCount)
+print("Graph solver success:", solveCount)
+
+
+    #print(ourPGS.solveTimeCost)
 
 """Every edge represent the passing of one day. 
 The configuration/state represents the number of days for each task until it has to be done again. 

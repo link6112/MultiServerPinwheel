@@ -703,7 +703,8 @@ class solver_foresight:
         self.soln = soln
 
         if self.reccomendedPrints:
-            print("solution found!:\t\t", self.soln)
+            sdgfdsgsd = "odkofdsko"
+            #print("solution found!:\t\t", self.soln)
 
         self.reorderSolution()
 

@@ -5,6 +5,7 @@ import itertools
 import scheduleGenerator
 from collections import OrderedDict
 import solver_foresight
+import listGenerator
 test="printstatementcheck"
 
 
@@ -36,15 +37,15 @@ class ScheduleSplit:
             elif densityCheck == "Splittable":
                 print("Splitting")
 
-                self.split(tasks, splitType)
+                finalSchedules = self.split(tasks, splitType)
 
-                return
+                return finalSchedules
             else:
                 print("Didn't work")
                 return
         elif splitType == "11/6":
-            self.split(tasks, splitType)
-        
+            finalSchedules = self.split(tasks, splitType)
+            return finalSchedules
     def split(self, tasks, splitType):
         """
         This function takes a set of tasks with density between 5/6 and 10/6 and splits them.
@@ -92,13 +93,13 @@ class ScheduleSplit:
                         for seq in itertools.combinations(individualDensityList, i) 
                         if sum(seq) <= target and sum(seq) >= target2]
         elif splitType == "11/6":
-            print("11/6 splitting")
+            #print("11/6 splitting")
             for i in tasks:
                 den = Fraction(1,i)
                 individualDensities[i] = den
                 individualDensityList.append(den)
             target = Fraction(1, 1) #5/6 density goal
-            target2 = Fraction(3, 6)
+            target2 = Fraction(2, 6)
 
 
             #This use of itertools gives ALL possible combinations of densities that are equal to
@@ -108,9 +109,10 @@ class ScheduleSplit:
                         if sum(seq) <= target and sum(seq) >= target2]
 
 
-        print("original length: ", len(result))
+        #print("original length: ", len(result))
+        #print(result)
         result = list(set(result))
-        print("optimised length: ",len(result))
+        #print("optimised length: ",len(result))
 
 
         #This code matches each density to its corresponding number and finds all possible combinations with their actual digits
@@ -130,6 +132,7 @@ class ScheduleSplit:
         #split is not allowed. It will move on to the next result with a density of 5/6 or below. Eventually
         #The code will have fully split all tasks into schedulable schedules.
         scheduleIterator = 0
+
         while scheduleIterator < len(result):
 
             for schedule in result:
@@ -172,12 +175,13 @@ class ScheduleSplit:
                         scheduleIterator+=1
                 else:
                     scheduleIterator+=1
+        return finalSchedules
 
                 
 
 
         count = 0
-        if __name__ == "__main__":
+        if __name__ == "__main__21":
             for i in finalSchedules:
                 #print(i)
                 count +=1
@@ -256,17 +260,85 @@ if __name__ == "__main__":
 
     #Density less than 12/6, possibly solvable based on all under density 1 and above density 5/6 can be solved.
     #not possible in loose pinwheel either.
-    #Task1.densityCheck([1,2,5,7,9], "11/6")
+    #Task1.densityCheck([1,2,3,10], "11/6")
 
 
     #Task1.densityCheck([2, 3, 3, 4, 4, 9, 17, 20], "11/6")
-    Task1.densityCheck([1, 3, 3, 5], "11/6")
+    #Task1.densityCheck([1, 3, 3, 5], "11/6")
 
 
 
 
-    #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "5/6+5/6")
+    #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100], "5/6+5/6")
     #Task1.densityCheck([2, 5, 6, 8, 10, 12, 14, 16, 18, 18], "<5/6+1")
+    allLists = listGenerator.listGeneratorVariableK()
+    failCount = 0
+    totalSolved = 0
+    realFail = 0
+    breakNow = False
+    print("solves needed for K=5: ", len(allLists))
+    for i in range(0, len(allLists)):
+        #_, dens = density.densityCalcWFraction(allLists[i]) 
+        #if dens < Fraction(10,6):
+        #    continue
+        #if dens > Fraction(11,6):
+        #    continue
+        if breakNow == True:
+            print(allLists[i-1])
+            realFail +=1
+        finalSchedules = Task1.densityCheck(allLists[i], "11/6")
+        solveCount = 0
+        if len(finalSchedules) > 0:
+            for k in finalSchedules:
+                    taskStatus0, densityValue1 = density.densityCalcPostSplit(k[0])
+                    taskStatus1, densityValue2 = density.densityCalcPostSplit(k[1])
+                    if taskStatus0 == "Possibly Solvable" and taskStatus1 == "Schedulable":
+                        solver = solver_foresight.solver_foresight(k[0], False, True, False)
+                        status = solver.solve()
+                        if status == 1:
+                            solveCount += 1
+                            break
+                    elif taskStatus1 == "Possibly Solvable" and taskStatus0 == "Schedulable":
+                        solver = solver_foresight.solver_foresight(k[1], False, True, False)
+                        status = solver.solve()
+                        if status == 1:
+                            solveCount += 1
+                            break
+                    elif taskStatus0 == "Possibly Solvable" and taskStatus1 == "Possibly Solvable":
+                        solver = solver_foresight.solver_foresight(k[0], False, True, False)
+                        status0 = solver.solve()
+                        solver = solver_foresight.solver_foresight(k[1], False, True, False)
+                        status1 = solver.solve()
+                        if status0 == 1 and status1 == 1:
+                            solveCount += 1
+                            break
+                    elif taskStatus0 == "Schedulable" and taskStatus1 == "Schedulable":
+                        solveCount+=1
+                        break
+                    else:
+                        failCount +=1
+            if solveCount == 0:
+                print("We found it")
+                breakNow = True
+            else:
+                breakNow = False
+                        
+        else:
+            failCount +=1
+        if solveCount >=1:
+            totalSolved +=1
+        #if totalSolved == 0:
+            #print("EXAMPLE IN HERE SOMEWHERE - RUN AGAIN")
+            #print(i)
+    #print(finalSchedules)
+    print("Split solve:", totalSolved)
+    print("Split fail:", failCount)
+    print("Actual fail:", realFail)
+    if totalSolved == 0:
+        print("EXAMPLE IN HERE SOMEWHERE - RUN AGAIN")
+                
+                
+
 
     k=11
     while k <= 10:
